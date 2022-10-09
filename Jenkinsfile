@@ -13,9 +13,9 @@ pipeline {
                 branch 'master'
             }
             steps {
-                node {
+                script {
                     checkout scm
-                    def customImage = docker.build("99409cdf561c/train-scheduler")
+                    customImage = docker.build("99409cdf561c/train-scheduler")
                     customImage.inside {
                     sh 'echo $(curl localhost:8080)'
                   }
@@ -27,7 +27,7 @@ pipeline {
                 branch 'master'
             }
             steps {
-                node {
+                script {
                     checkout scm
                     docker.withRegistry('https://registry.hub.docker.com/','docker_hub_login')
                     customImage.push("${env.BUILD_NUMBER}")
@@ -37,3 +37,4 @@ pipeline {
             }
         }
     }
+}
