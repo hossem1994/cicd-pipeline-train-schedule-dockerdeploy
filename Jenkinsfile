@@ -14,26 +14,25 @@ pipeline {
             }
             steps {
                 script {
-                    checkout scm
-                    customImage = docker.build("99409cdf561c/train-scheduler")
-                    customImage.inside {
-                    sh 'echo $(curl localhost:8080)'
-                  }
-               }
+                    app = docker.build("<DOCKER_HUB_USERNAME>/train-schedule")
+                    app.inside {
+                        sh 'echo $(curl localhost:8080)'
+                    }
+                }
             }
+        }
         stage('Push Docker Image') {
             when {
                 branch 'master'
             }
             steps {
                 script {
-                    checkout scm
-                    docker.withRegistry('https://registry.hub.docker.com/','docker_hub_login')
-                    customImage.push("${env.BUILD_NUMBER}")
-                    customImage.push("latest")
-                  }
-               }
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
+                }
             }
         }
-    }
-
+    }   
+}
