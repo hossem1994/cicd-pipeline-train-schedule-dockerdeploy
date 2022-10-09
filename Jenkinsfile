@@ -30,7 +30,7 @@ pipeline {
                 node {
                     checkout scm
                     docker.withRegistry('https://registry.hub.docker.com/','docker_hub_login')
-                    customImage.push("${env.BUILD_NUMBER})
+                    customImage.push("${env.BUILD_NUMBER}")
                     customImage.push("latest")
                   }
                }
